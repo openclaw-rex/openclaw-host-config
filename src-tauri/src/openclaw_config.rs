@@ -8,12 +8,8 @@ use std::path::PathBuf;
 const OPENCLAW_CONFIG_FILENAME: &str = "openclaw.json";
 
 /// Path to openclaw.json (e.g. ~/.openclaw/openclaw.json).
-#[must_use]
 pub fn openclaw_config_path() -> PathBuf {
-    dirs::home_dir()
-        .unwrap_or_else(|| PathBuf::from("."))
-        .join(".openclaw")
-        .join(OPENCLAW_CONFIG_FILENAME)
+    crate::get_base_dir().join(OPENCLAW_CONFIG_FILENAME)
 }
 
 /// View of the fields the UI needs: providers, primary model, models list, maxConcurrent, subagents.
@@ -61,6 +57,28 @@ pub fn get_openclaw_providers_raw() -> Result<serde_json::Value, String> {
         .cloned()
         .unwrap_or(serde_json::json!({}));
     Ok(providers)
+}
+
+pub fn get_raw_openclaw_config() -> serde_json::Value {
+    let path = openclaw_config_path();
+    let content = match fs::read_to_string(&path) {
+        Ok(c) => c,
+        Err(_) => return serde_json::json!({ "agents": { "defaults": {} }, "models": { "providers": {} } }),
+    };
+    serde_json::from_str(&content).unwrap_or_else(|_| serde_json::json!({ "agents": { "defaults": {} }, "models": { "providers": {} } }))
+}
+
+pub fn save_raw_openclaw_config(config: serde_json::Value) -> Result<(), String> {
+    let path = openclaw_config_path();
+    let dir = path.parent().ok_or("invalid path")?;
+    if !dir.exists() {
+        fs::create_dir_all(dir).map_err(|e| e.to_string())?;
+    }
+    fs::write(
+        &path,
+        serde_json::to_string_pretty(&config).map_err(|e| e.to_string())?,
+    )
+    .map_err(|e| e.to_string())
 }
 
 /// Reads openclaw.json and returns a view with required fields. Missing file or invalid JSON returns defaults.

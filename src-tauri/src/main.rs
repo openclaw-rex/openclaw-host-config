@@ -10,6 +10,7 @@ mod system;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::PathBuf;
+use std::sync::RwLock;
 
 #[derive(Serialize, Deserialize)]
 struct Config {
@@ -50,9 +51,36 @@ impl Default for Config {
     }
 }
 
+static BASE_DIR: RwLock<Option<PathBuf>> = RwLock::new(None);
+
+pub fn get_base_dir() -> PathBuf {
+    if let Ok(guard) = BASE_DIR.read() {
+        if let Some(path) = &*guard {
+            return path.clone();
+        }
+    }
+    dirs::home_dir()
+        .unwrap_or_else(|| PathBuf::from("."))
+        .join(".openclaw")
+}
+
 fn get_config_path() -> PathBuf {
-    let home_dir = dirs::home_dir().unwrap();
-    home_dir.join(".openclaw").join("config.json")
+    get_base_dir().join("config.json")
+}
+
+#[tauri::command]
+fn get_current_config_dir() -> String {
+    get_base_dir().to_string_lossy().to_string()
+}
+
+#[tauri::command]
+fn set_config_dir(path: String) -> Result<(), String> {
+    if let Ok(mut guard) = BASE_DIR.write() {
+        *guard = Some(PathBuf::from(path));
+        Ok(())
+    } else {
+        Err("Failed to acquire lock".into())
+    }
 }
 
 #[tauri::command]
@@ -228,10 +256,23 @@ fn check_gateway_status() -> Result<bool, String> {
     }
 }
 
+#[tauri::command]
+fn get_raw_openclaw_config() -> serde_json::Value {
+    openclaw_config::get_raw_openclaw_config()
+}
+
+#[tauri::command]
+fn save_raw_openclaw_config(config: serde_json::Value) -> Result<(), String> {
+    openclaw_config::save_raw_openclaw_config(config)
+}
+
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
+            get_current_config_dir,
+            set_config_dir,
             get_status,
             save_config,
             start_gateway,
@@ -250,7 +291,9 @@ fn main() {
             list_agents,
             get_agent_models,
             get_agent_provider_sync_status,
-            update_agent_providers_from_openclaw
+            update_agent_providers_from_openclaw,
+            get_raw_openclaw_config,
+            save_raw_openclaw_config
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

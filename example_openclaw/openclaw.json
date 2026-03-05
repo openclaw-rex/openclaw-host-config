@@ -1,0 +1,199 @@
+{
+    "agents": {
+        "defaults": {
+            "compaction": {
+                "mode": "safeguard"
+            },
+            "maxConcurrent": 4,
+            "model": {
+                "primary": "ollama/qwen3.5:cloud"
+            },
+            "models": {
+                "lmstudio/liquid/lfm2-24b-a2b": {
+                    "alias": "Qwen3.5"
+                }
+            },
+            "subagents": {
+                "maxChildrenPerAgent": 3,
+                "maxConcurrent": 4,
+                "maxSpawnDepth": 1,
+                "runTimeoutSeconds": 120000
+            },
+            "workspace": "/Users/alexokita/.openclaw/workspace"
+        }
+    },
+    "commands": {
+        "bash": true,
+        "native": "auto",
+        "nativeSkills": "auto",
+        "ownerDisplay": "raw",
+        "restart": true
+    },
+    "gateway": {
+        "auth": {
+            "mode": "token",
+            "token": "ollama"
+        },
+        "bind": "loopback",
+        "mode": "local",
+        "port": 18789,
+        "tailscale": {
+            "mode": "off",
+            "resetOnExit": false
+        }
+    },
+    "messages": {
+        "ackReactionScope": "group-mentions"
+    },
+    "meta": {
+        "lastTouchedAt": "2026-02-28T11:59:02.989Z",
+        "lastTouchedVersion": "2026.2.26"
+    },
+    "models": {
+        "providers": {
+            "lmstudio": {
+                "api": "openai-completions",
+                "apiKey": "sk-lm-8gs5pyxS:4x6UUzMYkMfu53cUbute",
+                "baseUrl": "http://127.0.0.1:1234/v1",
+                "models": [
+                    {
+                        "contextWindow": 32768,
+                        "cost": {
+                            "cacheRead": 0,
+                            "cacheWrite": 0,
+                            "input": 0,
+                            "output": 0
+                        },
+                        "id": "liquid/lfm2-24b-a2b",
+                        "input": [
+                            "text",
+                            "image"
+                        ],
+                        "maxTokens": 8192,
+                        "name": "LM Studio liquid/lfm2-24b-a2b",
+                        "reasoning": true
+                    }
+                ]
+            },
+            "ollama": {
+                "api": "ollama",
+                "apiKey": "ollama-local",
+                "baseUrl": "http://127.0.0.1:11434/v1",
+                "models": [
+                    {
+                        "cost": {
+                            "cacheRead": 0,
+                            "cacheWrite": 0,
+                            "input": 0,
+                            "output": 0
+                        },
+                        "id": "qwen3.5:cloud",
+                        "input": [
+                            "text",
+                            "image"
+                        ],
+                        "name": "qwen3.5:cloud",
+                        "reasoning": true
+                    },
+                    {
+                        "contextWindow": 202752,
+                        "cost": {
+                            "cacheRead": 0,
+                            "cacheWrite": 0,
+                            "input": 0,
+                            "output": 0
+                        },
+                        "id": "glm-4.7-flash",
+                        "input": [
+                            "text"
+                        ],
+                        "name": "glm-4.7-flash",
+                        "reasoning": true
+                    },
+                    {
+                        "contextWindow": 40960,
+                        "cost": {
+                            "cacheRead": 0,
+                            "cacheWrite": 0,
+                            "input": 0,
+                            "output": 0
+                        },
+                        "id": "qwen3",
+                        "input": [
+                            "text"
+                        ],
+                        "name": "qwen3",
+                        "reasoning": true
+                    },
+                    {
+                        "contextWindow": 262144,
+                        "cost": {
+                            "cacheRead": 0,
+                            "cacheWrite": 0,
+                            "input": 0,
+                            "output": 0
+                        },
+                        "id": "kimi-k2.5:cloud",
+                        "input": [
+                            "text",
+                            "image"
+                        ],
+                        "maxTokens": 262144,
+                        "name": "kimi-k2.5:cloud",
+                        "reasoning": true
+                    }
+                ]
+            }
+        }
+    },
+    "plugins": {
+        "entries": {
+            "openclaw-web-search": {
+                "enabled": true
+            }
+        }
+    },
+    "session": {
+        "dmScope": "per-channel-peer"
+    },
+    "skills": {
+        "entries": {
+            "apple-notes": {
+                "enabled": false
+            },
+            "apple-reminders": {
+                "enabled": false
+            },
+            "bluebubbles": {
+                "enabled": false
+            },
+            "polymarket-ai-divergence": {
+                "enabled": false
+            },
+            "polymarket-bot": {
+                "enabled": false
+            },
+            "polymarket-research": {
+                "enabled": false
+            },
+            "polymarket-scout": {
+                "enabled": false
+            }
+        }
+    },
+    "tools": {
+        "exec": {},
+        "subagents": {},
+        "web": {
+            "search": {
+                "enabled": false
+            }
+        }
+    },
+    "wizard": {
+        "lastRunAt": "2026-02-26T00:53:22.292Z",
+        "lastRunCommand": "onboard",
+        "lastRunMode": "local",
+        "lastRunVersion": "2026.2.24"
+    }
+}

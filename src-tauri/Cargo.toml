@@ -17,6 +17,7 @@ dirs = "5.0"
 tauri-plugin-shell = "2"
 sysinfo = "0.31"
 ureq = { version = "2", default-features = false, features = ["json"] }
+tauri-plugin-dialog = "2.0.0-rc.3"
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]

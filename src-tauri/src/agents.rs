@@ -12,9 +12,7 @@ const AGENT_SUBDIR: &str = "agent";
 const MODELS_JSON: &str = "models.json";
 
 fn openclaw_root() -> PathBuf {
-    dirs::home_dir()
-        .unwrap_or_else(|| PathBuf::from("."))
-        .join(".openclaw")
+    crate::get_base_dir()
 }
 
 /// Path to ~/.openclaw/agents.

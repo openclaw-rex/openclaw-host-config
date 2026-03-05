@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "identifier": "io.openclaw.config",
   "build": {
-    "beforeDevCommand": "npm run dev",
+    "beforeDevCommand": "npm run dev:ui",
     "devUrl": "http://localhost:3000",
-    "beforeBuildCommand": "",
+    "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist"
   },
   "app": {
